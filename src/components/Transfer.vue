@@ -19,14 +19,21 @@
       </div>
     </div>
     <div>
-    <div id="panel"></div>
+      <panel :transferResult="searchResult"></panel>
     </div>
+    <div id="panel"></div>
   </section>
 </template>
 
 <script>
+    import Route from '../base/Route'
+    import Panel from './Panel'
     export default {
         name: "transfer",
+        components:{
+          Route,
+          Panel
+        },
         data(){
           return{
             background:{},
@@ -36,11 +43,12 @@
             img2: {
               background: "url("+require('../../static/switch_act.back.png')+")"
             },
-            transferValue: {
+            transferValue: {//输出框的内容
               start: "西华大学西大门站",
               end: "天府三街"
             },
-            transfer:""
+            transfer:"",//用于查询的Transfer对象
+            searchResult: {},//获取到的数据对象
           }
         },
       methods: {
@@ -52,11 +60,13 @@
           this.background = this.background == this.img1 ? this.img2 : this.img1
         },
         search(){
-          this.transfer.search([{keyword: this.transferValue.start},{keyword: this.transferValue.end}], function(status, result){
+          this.transfer.search([{keyword: this.transferValue.start},{keyword: this.transferValue.end}], (status, result)=>{
             //  解析返回结果，自己生成操作界面和地图展示界面
             if(status === 'complete' && result.info === 'OK'){
+              console.log(result)
+              this.searchResult = result
               //此时的唯一组件是
-              console.log(JSON.stringify(result))
+              // console.log(JSON.stringify(result))
             }else{
               console.log(result)
             }
@@ -71,10 +81,10 @@
           _this.transfer = new AMap.Transfer({
             city: '成都市',
             extensions: 'all',
-            panel: 'panel'
-          });
+            // panel: 'panel',
+            // policy: 'NO_SUBWAY'
+          })
         })
-
       }
     }
 </script>
