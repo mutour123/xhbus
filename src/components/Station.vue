@@ -1,14 +1,30 @@
 <template>
  <section>
    <div class="inputContent">
-     <el-input class="stationInput" v-model="stationValue" placeholder="线路名称，如“西华大学南大门站”" clearable></el-input>
+     <el-input class="stationInput" v-model="stationValue" placeholder="站点名称，如“西华大学南大门站”" clearable></el-input>
      <el-button class="searchButton" @click="search" type="primary" icon="el-icon-search">搜索</el-button>
    </div>
    <div>
+     <div>
+       <div>
+         <img src="../../static/10.jpg" alt="bus">
+       </div>
+       <div>
+         <h3>西华大学南大门<span>途径路线7条</span></h3>
+         <ul>
+           <li>P04路</li>
+           <li>P40路</li>
+           <li>G173路</li>
+           <li>720路</li>
+           <li>720A路</li>
+           <li>723路</li>
+           <li>733路</li>
+         </ul>
+       </div>
+     </div>
      <div id="panel" ref="panel">
 
      </div>
-
    </div>
  </section>
 </template>
@@ -27,7 +43,7 @@
               this.stationSearch.search(this.stationValue, (status, result)=>{
                 if(status === 'complete' && result.info === 'OK'){
                   console.log(result)
-                  this.$refs.panel.innerHTML = JSON.stringify(result)
+                  // this.$refs.panel.innerHTML = JSON.stringify(result)
                 }else{
                   console.log(result)
                 }

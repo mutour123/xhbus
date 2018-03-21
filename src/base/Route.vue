@@ -43,14 +43,7 @@
         如果是SUBWAY:
           添加subway样式
           在其后添加一个dd标签
-
       -->
-
-      <!--<dt v-for="item in itemData.segments" class="bus-route walk clearfloat" index="0">
-        <div class="beforedtwalk"></div>
-        <span>{{item.instruction}}</span>
-        <div class="afterdt"></div>
-      </dt>-->
       <div v-for="(item, index) in itemData.segments" :key="index">
         <dt class="bus-route clearfloat" :class="{bus:item.transit_mode==='BUS',walk:item.transit_mode==='WALK', subway:item.transit_mode==='SUBWAY'}" index="1">
           <div :class="{beforedtbus:item.transit_mode==='BUS',beforedtwalk:item.transit_mode==='WALK', beforedtsubway:item.transit_mode==='SUBWAY'}" ></div>
@@ -67,7 +60,6 @@
           </h4>
           <ul>
             <li v-for="listitem in item.transit.via_stops">{{listitem.name}}</li>
-
           </ul>
           <h4>
             <a href="javascript:void(0)" class="busstop">
@@ -79,99 +71,18 @@
           <div  style="border: 2px seagreen solid;width: 0;padding: 0;height: 15px;z-index:12;margin-top: -10px;position: absolute;" class=""></div>
         </dd>
       </div>
-
-    <!--  <dt class="bus-route walk clearfloat" index="0">
-        <div class="beforedtwalk"></div>
-        <span>步行316米到达百草路</span>
-        <div class="afterdt"></div>
-      </dt>
-      <dt class="bus-route bus clearfloat" index="1">
-        <div class="beforedtbus"></div>
-        <span>地铁2号线（犀浦&#45;&#45;龙泉驿）</span>
-        <div class="afterdt afterdtbus"></div>
-      </dt>
-      <dd>
-        <div>
-          <h4>
-            <a @click="showUl"  href="javascript:void(0)" class="busstop">
-              百草路
-            </a>
-            <span>上车</span>
-          </h4>
-          <ul>
-            <li>金州路</li>
-            <li>金科北路</li>
-            <li>迎宾大道</li>
-            <li>茶店子客运站</li>
-            <li>人民公园</li>
-            <li>天府广场</li>
-          </ul>
-          <h4>
-            <a href="javascript:void(0)" class="busstop">
-              天府广场
-            </a>
-            <span>下车</span>
-          </h4>
-          &lt;!&ndash;<a href="javascript:void(0)" class="el-icon-arrow-down">&ndash;&gt;
-          &lt;!&ndash;<div class="el-icon-arrow-down" href="javascript:void(0)">&ndash;&gt;
-          &lt;!&ndash;<span class="aftera"></span>&ndash;&gt;
-          &lt;!&ndash;</div>&ndash;&gt;
-        </div>
-        &lt;!&ndash;</a>&ndash;&gt;
-        <div  style="border: 2px seagreen solid;width: 0;padding: 0;height: 15px;z-index:12;margin-top: -10px;position: absolute;" class=""></div>
-      </dd>
-      <dt class="bus-route walk clearfloat" index="0">
-        <div class="beforedtwalk"></div>
-        <span>步行96米到达天府广场</span>
-        <div class="afterdt"></div>
-      </dt>
-      <dt class="bus-route subway subwayline1" index="1">
-        <div class="beforedtsubway"></div>
-        <span>地铁1号线(犀浦&#45;&#45;龙泉驿)</span>
-        <div class="afterdt"></div>
-      </dt>
-      <dd>
-        <div>
-          <h4>
-            <a @click="showUl"  href="javascript:void(0)" class="busstop">
-              天府广场
-            </a>
-            <span>上车</span>
-          </h4>
-          <ul>
-            <li>锦江宾馆</li>
-            <li>华西坝</li>
-            <li>红合路口站</li>
-            <li>万安工业园站</li>
-            <li>天府三街</li>
-          </ul>
-          <h4>
-            <a href="javascript:void(0)" class="busstop">
-              天府三街
-            </a>
-            <span>下车</span>
-          </h4>
-
-          &lt;!&ndash;<a href="javascript:void(0)" class="el-icon-arrow-down">&ndash;&gt;
-          &lt;!&ndash;<div class="el-icon-arrow-down" href="javascript:void(0)">&ndash;&gt;
-          &lt;!&ndash;<span class="aftera"></span>&ndash;&gt;
-          &lt;!&ndash;</div>&ndash;&gt;
-        </div>
-        &lt;!&ndash;</a>&ndash;&gt;
-        <div  style="border: 2px seagreen solid;width: 0;padding: 0;height: 15px;z-index:12;margin-top: -10px;position: absolute;" class=""></div>
-
-      </dd>-->
-      <!--最后一个-->
       <dt class="busstop end" index="1">
         <div class="beforedtend"></div>
         {{transferTo}}
       </dt>
+      <div class="clearfloat" style="border-bottom: 1px silver solid">
+        <el-button @click="collection" type="primary right">收藏</el-button>
+      </div>
     </dl>
   </div>
 </template>
 
 <script>
-
   export default {
     name: "route",
     props: [
@@ -185,15 +96,27 @@
       }
     },
     methods: {
+      /**
+       * 展示路线详情
+       * @param e
+       */
       showPlan(e){
         let target = e.target
         $(target).parent().next().toggle()
       },
+      /**
+       * 展示途径站点
+       * @param e
+       */
       showUl(e){
         let target = e.target
         $(target).parent().next().toggle()
       },
+      /**
+       * 得到这次路线用到的公交班车（723，726，p04）的数组
+       */
       getBusArray(){
+        this.busArray = []
         this.itemData.segments.forEach(item => {
           if (item.transit_mode === 'WALK')
             return
@@ -203,18 +126,48 @@
           this.busArray.push(match[0])
         })
       },
+      /**
+       * 格式化时间
+       * @param 时间戳
+       * @returns {1小时11分钟}
+       */
       getTime(num){
         let m = (num/60)|0//分钟
         let h = (m/60)|0//得到整数小时
         m = m-h*60
         return `${h}小时${m}分钟`
-
+      },
+      /**
+       * 收藏路线
+       * @param event
+       */
+      collection(){
+        this.$http.get('/api/collection')
+          .then(res => {
+            console.log(res)
+            this.$message({
+              showClose: true,
+              message: '收藏成功',
+              type: 'success'
+            })
+          })
+          .catch(err => {
+            console.log(err)
+            this.$message({
+              showClose: true,
+              message: '收藏失败，请重新收藏',
+              type: 'error'
+            })
+          })
       }
-    },
-    created(){
     },
     mounted(){
       this.getBusArray()
+    },
+    watch: {
+      itemData:function() {
+        this.getBusArray()
+      }
     }
   }
 </script>
@@ -241,7 +194,6 @@
       color red
       padding-left 3px
   .route-item
-    border 1px seagreen solid
     padding 6px 5px
     margin-bottom 2px
     border-top 1px solid #e6e6e6
@@ -316,6 +268,11 @@
           list-style none
   .start,.end
     font-size 14px
+  .end
+    margin-bottom 5px
+  .right
+    width 100%
+    margin-bottom 10px
   .walk
     font-size 12px
   .bus
@@ -369,7 +326,5 @@
     content ""
     visibility hidden
     height 0
-
-
 
 </style>

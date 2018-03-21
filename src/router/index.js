@@ -23,6 +23,7 @@ export default new Router({
         },
         {
           path: '/linesearch',
+          name: 'LineSearch',
           component: LineSearch
         },
         {
