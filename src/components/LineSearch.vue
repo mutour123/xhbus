@@ -4,14 +4,8 @@
       <el-input class="linferInput" v-model="lineValue" placeholder="线路名称，如“723”" clearable></el-input>
       <el-button class="searchButton" @click="search" type="primary" icon="el-icon-search">搜索</el-button>
     </div>
-    <div>
-      <div class="via_stops" >
-        <p class="lineName" >
-          <span ref="lineNameZ"></span>
-          <span ref="lineDirectionZ" class="titleDirection"></span>
-        </p>
-        <line-base :via_stops="via_stops"></line-base>
-      </div>
+    <div v-if="via_stops.length">
+      <line-base  :via_stops="via_stops" :lineName="lineName"></line-base>
     </div>
   </section>
 </template>
@@ -31,14 +25,14 @@
         linesearch: '',
         lineValue: '723',
         via_stops: [],
+        lineName: ''
       }
     },
     methods: {
       search(){
         this.linesearch.search(this.lineValue, (status, result)=>{
           if(status === 'complete' && result.info === 'OK'){
-            this.$refs.lineNameZ.innerHTML = result.lineInfo[0].name
-            this.$refs.lineDirectionZ.innerHTML = "正向"
+            this.lineName = result.lineInfo[0].name
             this.via_stops = result.lineInfo[0].via_stops
           }else{
             console.log(result)

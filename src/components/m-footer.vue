@@ -20,7 +20,8 @@
 
 <style scoped lang="stylus">
   footer
-    height 100px
+    font-size 13px
+    height 60px
     padding-top 40px
     background-color #E6DFE1
     color #444

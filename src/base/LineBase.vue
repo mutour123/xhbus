@@ -1,11 +1,25 @@
 <template>
     <div>
+      <p class="lineName" >
+        <span >{{lineName}}</span>
+        <span class="titleDirection">正向</span>
+      </p>
       <ul>
           <li v-for="(value, index) in via_stops" :key="index" class="lineItem">
-            <i>{{value.sequence}}</i>
+            <i>{{index+1}}</i>
             <a href="#">{{value.name}}</a>
           </li>
         </ul>
+      <p class="lineName" >
+        <span >{{lineName}}</span>
+        <span class="titleDirection">反向</span>
+      </p>
+      <ul>
+        <li v-for="(value, index) in revvia_stops" :key="index" class="lineItem">
+          <i>{{index+1}}</i>
+          <a href="#">{{value.name}}</a>
+        </li>
+      </ul>
     </div>
 </template>
 
@@ -13,8 +27,28 @@
     export default {
       name: "line-base",
       props:  [
-        'via_stops'
+        'via_stops',
+        'lineName'
+      ],
+      data(){
+        return {
+          // revvia_stops: [],
+        }
+      },
+      computed: {
+        revvia_stops(){
+          let [...arr] = this.via_stops
+          return arr.reverse()
+        }
+      }
+
+      /*
+      via_stops数据格式：
+      [
+        {name:"茶店子公交站"}
       ]
+
+      */
     }
 </script>
 

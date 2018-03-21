@@ -24,12 +24,6 @@
             <span slot="title">站点查询</span>
           </el-menu-item>
         </el-menu>
-        <!--<ul class="menu">
-          <router-link tag="li" to="/mine" class="menuItem">我的</router-link>
-          <router-link tag="li" to="/transfer" class="menuItem">换乘查询</router-link>
-          <router-link tag="li" to="/line" class="menuItem">线路查询</router-link>
-          <router-link tag="li" to="/station" class="menuItem">站点查询</router-link>
-        </ul>-->
         <div class="detail">
           <router-view/>
         </div>
@@ -54,7 +48,6 @@
 <style scoped lang="stylus">
   main
     width 80%
-    /*border 1px salmon solid*/
     margin auto
     padding 20px
     min-width 850px
@@ -69,10 +62,9 @@
       padding 10px
       cursor pointer
       background-color #f1f1f1
-
   .detail
     flex-grow 1
-    min-height 400px
+    min-height 440px
     padding 20px
   .router-link-active
     background-color slateblue!important

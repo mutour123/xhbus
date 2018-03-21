@@ -12,6 +12,8 @@ app.use( static(path.join(__dirname+ "/static")));
 
 router.get('/', rt.root)
 router.get('/collection', rt.collection)
+router.post('/login', rt.login)
+router.post('/reg', rt.reg)
 
 
 
