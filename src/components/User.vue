@@ -1,9 +1,7 @@
 <template>
     <div id="user">
       <m-header></m-header>
-      <keep-alive>
-        <router-view/>
-      </keep-alive>
+      <index-page></index-page>
       <m-footer></m-footer>
     </div>
 </template>
@@ -11,11 +9,13 @@
 <script>
   import MHeader from './m-header'
   import MFooter from './m-footer'
+  import IndexPage from './IndexPage'
     export default {
         name: "user",
       components: {
         MHeader,
-        MFooter
+        MFooter,
+        IndexPage
       }
     }
 </script>

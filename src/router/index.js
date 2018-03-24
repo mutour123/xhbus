@@ -14,28 +14,26 @@ export default new Router({
     {
       path: '/',
       component: User,
-
-      // component: IndexPage,
-      // redirect: '/mine',
+      redirect: '/transfer',
       children: [
-        {
-          path: '/mine',
-          component: Mine
-        },
-        {
-          path: '/transfer',
-          component: Transfer
-        },
-        {
-          path: '/linesearch',
-          name: 'LineSearch',
-          component: LineSearch
-        },
-        {
-          path: '/station',
-          component: Station
-        }
-      ]
+            {
+              path: '/mine',
+              component: Mine
+            },
+            {
+              path: '/transfer',
+              component: Transfer
+            },
+            {
+              path: '/linesearch',
+              name: 'LineSearch',
+              component: LineSearch
+            },
+            {
+              path: '/station',
+              component: Station
+            }
+          ]
     },
     {
       path: '/admin',
