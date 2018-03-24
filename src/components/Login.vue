@@ -2,7 +2,7 @@
     <div>
       <el-form :model="form">
         <el-form-item label="用户名:" :label-width="formLabelWidth">
-          <el-input v-model="form.name" placeholder="请输入用户名" auto-complete="off"></el-input>
+          <el-input v-model="form.account" placeholder="请输入用户名" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码:" :label-width="formLabelWidth">
           <el-input type="password" v-model="form.password" placeholder="请输入密码" auto-complete="off"></el-input>
@@ -18,40 +18,49 @@
 </template>
 
 <script>
-    export default {
+  import Qs from 'qs'
+  import { mapGetters } from 'vuex'
+  export default {
       name: "login",
       data(){
         return {
           form: {
-            name: '念念公子',
+            account: '念念公子',
             password: '123456'
           },
           formLabelWidth: '120px',
         }
       },
       computed: {
-        isLogin(){
-          return this.$store.state.isLogin
-        }
+        ...mapGetters([
+          'isLogin'
+        ])
       },
       methods: {
         loginHander(){
           this.$emit('hidden')
-          let _this = this
-          this.$http.post('/api/login', {
-            username: this.form.name,
-            password: this.form.password
-          })
-            .then(res => {
-              console.log(res)
-              _this.$store.commit('login')
-              _this.$message({
-                showClose: true,
-                message: '登录成功',
-                type: 'success'
-              })
+          let data = Qs.stringify(this.form)
+          this.$http.post('/api/user/login.do',data,
+            {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+          ).then(res => {
+            console.log(res.data)
+            this.$store.commit('login',res.data.data)
+            this.$message({
+              showClose: true,
+              message: '登录成功',
+              type: 'success'
             })
-            .catch( err => {
+          }).catch(err => {
+            console.log(err)
+            this.$message({
+              showClose: true,
+              message: '登录失败',
+              type: 'error'
+            })
+          })
+
+
+            /*.catch( err => {
               console.log(err)
               console.log('登录失败')
               _this.$message({
@@ -59,7 +68,7 @@
                 message: '登录失败',
                 type: 'error'
               })
-            })
+            })*/
         },
       }
     }

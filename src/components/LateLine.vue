@@ -1,11 +1,20 @@
 <template>
-    <div class="line">
-      <panel v-for="(item, index) in searchResultArr" :key="index" :transferResult="item"></panel>
+  <div>
+    <div v-if="isLogin">
+      <div class="line">
+        <panel v-for="(item, index) in searchResultArr" :key="index" :transferResult="item"></panel>
+      </div>
     </div>
+    <div v-else>
+      <h2>你还没有登录，请先登录...</h2>
+    </div>
+  </div>
+
 </template>
 
 <script>
   import Panel from './Panel'
+  import { mapGetters } from 'vuex'
   export default {
     name: "late-l-ine",
     components: {
@@ -17,7 +26,14 @@
         searchResultArr: []
       }
     },
+    computed: {
+      ...mapGetters([
+        'isLogin'
+      ])
+    },
     mounted(){
+
+
       //得到最近路线的信息
       this.lateline = [
         {

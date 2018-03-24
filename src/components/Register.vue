@@ -2,7 +2,7 @@
   <div>
     <el-form :model="form" :rules="rules2" ref="ruleForm2">
       <el-form-item required label="用户名:" :label-width="formLabelWidth">
-        <el-input v-model="form.name" placeholder="请输入用户名" auto-complete="off"></el-input>
+        <el-input v-model="form.username" placeholder="请输入用户名" auto-complete="off"></el-input>
       </el-form-item>
       <el-form-item  label="密码" :label-width="formLabelWidth" prop="password">
         <el-input type="password" v-model="form.password" placeholder="请输入密码"  auto-complete="off"></el-input>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+  import Qs from 'qs'
     export default {
         name: "register",
         data(){
@@ -63,13 +64,13 @@
           return {
             formLabelWidth: '120px',
             form: {
-              name: '念念公子',
+              username: '念念公子',
               password: '123456',
               checkPass: '123456',
               gender: '1',
               birthday: '2018-03-21',
               introduce: '这个人很懒，没有留下任何东西...',
-              telphone: '12345678910'
+              telphone: '17345678910'
             },
             rules2: {
               password: [
@@ -87,19 +88,17 @@
         },
         regHhander(){
           if (this.password != this.checkPass){
-
             return
           }
-
           this.$emit('hidden')
           let _this = this
-          this.$http.post('/api/reg', {
-            username: this.form.name,
-            password: this.form.password
-          })
+          let data = Qs.stringify(this.form)
+          this.$http.post('/api/user/register.do',
+            data,
+            {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+            )
             .then(res => {
-              console.log(res)
-              console.log('注册成功')
+              console.log(res.data)
               _this.$message({
                 showClose: true,
                 message: '注册成功',

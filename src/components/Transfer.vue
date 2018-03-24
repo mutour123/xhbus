@@ -19,7 +19,10 @@
       </div>
     </div>
     <div>
-      <panel :transferResult="searchResult"></panel>
+      <panel
+        :transferResult="searchResult"
+        :isCollected=false
+      ></panel>
     </div>
   </section>
 </template>

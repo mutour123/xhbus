@@ -2,7 +2,8 @@
 const state= {
   test: '',
   AMap: {},
-  isLogin: false
+  isLogin: false,
+  person:{}
 }
 
 

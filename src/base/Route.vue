@@ -76,24 +76,40 @@
         {{transferTo}}
       </dt>
       <div class="clearfloat" style="border-bottom: 1px silver solid">
-        <el-button @click="collection" type="primary right">收藏</el-button>
+        <el-button v-if="!isCollected" @click="collection" type="primary right">收藏</el-button>
+        <el-button v-else @click="deleteCollection" type="primary right">删除</el-button>
       </div>
     </dl>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+  import Qs from 'qs'
+
   export default {
     name: "route",
     props: [
       "itemData",
       "transferForm",
-      "transferTo"
+      "transferTo",
+      "start_longitude",
+      "start_latitude",
+      "end_longitude",
+      "end_latitude",
+      "isCollected"
     ],
     data(){
       return {
-        busArray:[]
+        test: 'test',
+        busArray:[],
+        collectionData: {}
       }
+    },
+    computed: {
+      ...mapGetters([
+        'person'
+      ])
     },
     methods: {
       /**
@@ -142,9 +158,28 @@
        * @param event
        */
       collection(){
-        this.$http.get('/api/collection')
+        if (!person.user_id){
+          return false
+        }
+
+        this.collectionData = {
+          'start_point(string)': this.transferForm,
+          'end_point(string)': this.transferTo,
+          'start_longitude(string)': this.start_longitude,
+          'start_latitude(string)': this.start_latitude,
+          'end_longitude(string)': this.end_longitude,
+          'end_latitude(string)': this.end_latitude,
+          'area(string)': '成都',
+          'route_information(varchar(200))': '',
+          'user_id(int)': person.user_id
+        }
+        this.collectionData['route_information(varchar(200))'] = JSON.stringify(this.busArray)
+        let data = Qs.stringify(this.collectionData)
+        this.$http.post('/api/collection/add.do',data ,
+          {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+        )
           .then(res => {
-            console.log(res)
+            console.log(res.data)
             this.$message({
               showClose: true,
               message: '收藏成功',
@@ -159,10 +194,15 @@
               type: 'error'
             })
           })
+      },
+      deleteCollection(){
+        console.log('删除')
       }
+
     },
     mounted(){
       this.getBusArray()
+
     },
     watch: {
       itemData:function() {

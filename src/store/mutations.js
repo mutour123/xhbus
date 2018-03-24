@@ -1,6 +1,7 @@
 const mutations = {
-  login(state) {
+  login(state, person) {
     state.isLogin = true
+    state.person = person
   }
 }
 

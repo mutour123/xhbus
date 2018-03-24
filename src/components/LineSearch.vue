@@ -1,24 +1,22 @@
 <template>
-  <section>
-    <div class="inputContent">
-      <el-input class="linferInput" v-model="lineValue" placeholder="线路名称，如“723”" clearable></el-input>
-      <el-button class="searchButton" @click="search" type="primary" icon="el-icon-search">搜索</el-button>
-    </div>
-    <div v-if="via_stops.length">
-      <line-base  :via_stops="via_stops" :lineName="lineName"></line-base>
-    </div>
+  <section >
+      <div class="inputContent">
+        <el-input class="linferInput" v-model="lineValue" placeholder="线路名称，如“723”" clearable></el-input>
+        <el-button class="searchButton" @click="search" type="primary" icon="el-icon-search">搜索</el-button>
+      </div>
+      <div v-if="via_stops.length">
+        <line-base  :via_stops="via_stops" :lineName="lineName"></line-base>
+      </div>
   </section>
 </template>
 
 <script>
   import LineBase from '../base/LineBase'
-
+  import { mapGetters } from 'vuex'
   export default {
     name: "LineSearch",
     components: {
-      // Route,
       LineBase,
-      // LateLine
     },
     data(){
       return {
@@ -27,6 +25,11 @@
         via_stops: [],
         lineName: ''
       }
+    },
+    computed: {
+      ...mapGetters([
+        'isLogin'
+      ])
     },
     methods: {
       search(){

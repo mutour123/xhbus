@@ -16,22 +16,22 @@
     <div>
       <el-form :model="form"  ref="ruleForm2">
         <el-form-item required label="用户名:" :label-width="formLabelWidth">
-          <el-input v-model="form.username" placeholder="请输入用户名" auto-complete="off"></el-input>
+          <el-input v-model="person.username" placeholder="请输入用户名" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item  label="性别" :label-width="formLabelWidth">
-          <el-select v-model="form.gender" placeholder="请选择性别">
+          <el-select v-model="person.gender" placeholder="请选择性别">
             <el-option label="男" selected value="1"></el-option>
             <el-option label="女" value="2"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item  label="生日" :label-width="formLabelWidth">
-          <el-date-picker type="date" placeholder="选择日期" v-model="form.birthday" style="width: 100%;"></el-date-picker>
+          <el-date-picker v-model="person.birthday" type="date" placeholder="选择日期"  style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="用户介绍:" :label-width="formLabelWidth">
-          <el-input v-model="form.introduce" placeholder="请输入个人介绍" auto-complete="off"></el-input>
+          <el-input v-model="person.introduce" placeholder="请输入个人介绍" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item required label="电话号码:"  :label-width="formLabelWidth">
-          <el-input  v-model="form.telphone" type="tel" placeholder="请输入电话号码" ></el-input>
+          <el-input  v-model="person.telphone" type="tel" placeholder="请输入电话号码" ></el-input>
         </el-form-item>
         <div class="clearfloat">
           <div class="mbtncon">
@@ -59,6 +59,7 @@
 
 <script>
   import vueCropper from 'vue-cropper'
+  import { mapGetters } from 'vuex'
   export default {
     name: "setting",
     data() {
@@ -88,6 +89,11 @@
           minContainerWidth : 300
         }
       }
+    },
+    computed: {
+      ...mapGetters([
+        'person'
+      ])
     },
     components: {
       vueCropper

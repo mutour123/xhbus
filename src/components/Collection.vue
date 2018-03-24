@@ -1,11 +1,25 @@
 <template>
-  <div class="collection">
-    <panel v-for="(item, index) in searchResultArr" :key="index" :transferResult="item"></panel>
+  <div>
+    <div v-if="isLogin">
+      <div class="collection">
+        <panel
+          v-for="(item, index) in searchResultArr"
+          :key="index"
+          :transferResult="item"
+          :isCollected=true
+        ></panel>
+      </div>
+    </div>
+    <div v-else>
+      <h2>你还没有登录，请先登录...</h2>
+    </div>
   </div>
 </template>
 
 <script>
   import Panel from './Panel'
+  import { mapGetters } from 'vuex'
+
   export default {
     name: "collection",
     components: {
@@ -16,6 +30,11 @@
         lateline: [],
         searchResultArr: []
       }
+    },
+    computed: {
+      ...mapGetters([
+        'isLogin'
+      ])
     },
     mounted(){
       //得到收藏路线的信息

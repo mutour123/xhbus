@@ -1,23 +1,31 @@
 <template>
   <div>
-    <div class="addAdress">
-      <div class="value">
-        <el-input v-model="addValue" placeholder="请输入内容" clearable></el-input>
+    <div v-if="isLogin">
+      <div class="addAdress">
+        <div class="value">
+          <el-input v-model="addValue" placeholder="请输入内容" clearable></el-input>
+        </div>
+        <el-button @click="addHander" type="primary">添加</el-button>
       </div>
-      <el-button @click="addHander" type="primary">添加</el-button>
+      <div class="addAdressList">
+        <ul>
+          <li v-for="(item, index) in addressArr" :data-index="index">
+            {{( index + 1)}}. {{  item}}
+            <span @click="delHander($event)" title="删除" class="el-icon-close delete"></span>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="addAdressList">
-      <ul>
-        <li v-for="(item, index) in addressArr" :data-index="index">
-          {{( index + 1)}}. {{  item}}
-          <span @click="delHander($event)" title="删除" class="el-icon-close delete"></span>
-        </li>
-      </ul>
+    <div v-else>
+      <h2>你还没有登录，请先登录...</h2>
+
     </div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: "common-address",
     data(){
@@ -29,6 +37,11 @@
           '成都医学院'
         ]
       }
+    },
+    computed: {
+      ...mapGetters([
+        'isLogin'
+      ])
     },
     methods: {
       addHander(){
