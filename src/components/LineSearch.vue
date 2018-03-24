@@ -11,14 +11,14 @@
 </template>
 
 <script>
-  import Route from '../base/Route'
   import LineBase from '../base/LineBase'
 
   export default {
     name: "LineSearch",
     components: {
-      Route,
+      // Route,
       LineBase,
+      // LateLine
     },
     data(){
       return {
@@ -30,7 +30,7 @@
     },
     methods: {
       search(){
-        this.linesearch.search(this.lineValue, (status, result)=>{
+        this.$store.state.AMap.linesearch.search(this.lineValue, (status, result)=>{
           if(status === 'complete' && result.info === 'OK'){
             this.lineName = result.lineInfo[0].name
             this.via_stops = result.lineInfo[0].via_stops
@@ -40,18 +40,7 @@
         })
       }
     },
-    mounted(){
-      let _this = this
-      AMap.service(["AMap.LineSearch"], function() {
-        _this.linesearch = new AMap.LineSearch({
-          pageIndex:1,
-          city: '成都',
-          pageSize: 1,
-          extensions: 'all',
-          panel: 'panel'
-        })
-      })
-    }
+
   }
 </script>
 

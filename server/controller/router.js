@@ -14,3 +14,7 @@ exports.reg = async ctx => {
   ctx.type = 'json'
   ctx.body = '注册成功'
 }
+exports.modify = async ctx => {
+  ctx.type = 'json'
+  ctx.body = '修改成功'
+}

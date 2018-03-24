@@ -21,7 +21,6 @@
     <div>
       <panel :transferResult="searchResult"></panel>
     </div>
-    <div id="panel"></div>
   </section>
 </template>
 
@@ -60,7 +59,7 @@
           this.background = this.background == this.img1 ? this.img2 : this.img1
         },
         search(){
-          this.transfer.search([{keyword: this.transferValue.start},{keyword: this.transferValue.end}], (status, result)=>{
+          this.$store.state.AMap.transfer.search([{keyword: this.transferValue.start},{keyword: this.transferValue.end}], (status, result)=>{
             //  解析返回结果，自己生成操作界面和地图展示界面
             if(status === 'complete' && result.info === 'OK'){
               console.log(result)
@@ -70,21 +69,12 @@
             }else{
               console.log(result)
             }
-          });
+          })
 
         }
       },
       mounted(){
         this.background = this.img1
-        let _this = this
-        AMap.service('AMap.Transfer', function(){
-          _this.transfer = new AMap.Transfer({
-            city: '成都市',
-            extensions: 'all',
-            // panel: 'panel',
-            // policy: 'NO_SUBWAY'
-          })
-        })
       }
     }
 </script>

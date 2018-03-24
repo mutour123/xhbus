@@ -49,7 +49,7 @@
         },
         methods:{
             search(){
-              this.stationSearch.search(this.stationValue, (status, result)=>{
+              this.$store.state.AMap.stationSearch.search(this.stationValue, (status, result)=>{
                 if(status === 'complete' && result.info === 'OK'){
                   console.log(result)
                   this.stationResult = result
@@ -74,9 +74,8 @@
              //调用路线查询接口
             this.stationLine = []
             this.stationBusAll.forEach(item => {
-              console.log(item)
               //发起请求
-              this.linesearch.search(item, (status, result)=>{
+              this.$store.state.AMap.linesearch.search(item, (status, result)=>{
                 if(status === 'complete' && result.info === 'OK'){
                   //成功得到结果,并装到stationLine中
                   let obj = {}
@@ -94,23 +93,6 @@
         },
         mounted(){
           let _this = this
-          AMap.service('AMap.StationSearch',function(){//回调函数
-            //实例化StationSearch
-            _this.stationSearch= new AMap.StationSearch({
-              pageIndex: 1, //页码
-              pageSize: 60, //单页显示结果条数
-              city:'成都'    //确定搜索城市
-            })
-          })
-          AMap.service(["AMap.LineSearch"], function() {
-            _this.linesearch = new AMap.LineSearch({
-              pageIndex:1,
-              city: '成都',
-              pageSize: 1,
-              extensions: 'all',
-              panel: 'panel'
-            })
-          })
         }
     }
 </script>

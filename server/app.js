@@ -14,7 +14,7 @@ router.get('/', rt.root)
 router.get('/collection', rt.collection)
 router.post('/login', rt.login)
 router.post('/reg', rt.reg)
-
+router.post('/modify', rt.modify)
 
 
 app.listen('3000',()=>{

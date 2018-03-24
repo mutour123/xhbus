@@ -5,14 +5,18 @@ import Mine from '../components/Mine'
 import Transfer from '../components/Transfer'
 import LineSearch from '../components/LineSearch'
 import Station from '../components/Station'
+import User from '../components/User'
+import Admin from '../components/Admin'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/',
-      component: IndexPage,
-      redirect: '/mine',
+      component: User,
+
+      // component: IndexPage,
+      // redirect: '/mine',
       children: [
         {
           path: '/mine',
@@ -32,6 +36,10 @@ export default new Router({
           component: Station
         }
       ]
+    },
+    {
+      path: '/admin',
+      component: Admin
     }
   ]
 })
