@@ -11,6 +11,8 @@
         :end_longitude="transferResult.destination.lng"
         :end_latitude="transferResult.destination.lat"
         :isCollected="isCollected"
+        :collection_id=item.collection_id
+        v-on:delete="deleteCollection"
       ></route>
     </div>
 </template>
@@ -24,8 +26,13 @@
     },
     props:[
       'transferResult',
-      'isCollected'
-    ]
+      'isCollected',
+    ],
+    methods: {
+      deleteCollection(data){
+        this.$emit('delete', data)
+        }
+    }
   }
 </script>
 

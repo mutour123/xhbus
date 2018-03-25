@@ -1,6 +1,8 @@
 <template>
   <div id="admin">
-    <header></header>
+    <header>
+      <admin-header></admin-header>
+    </header>
     <nav>
       <el-menu
         default-active="2"
@@ -24,9 +26,9 @@
           <i class="el-icon-menu"></i>
           <span slot="title">导航二</span>
         </el-menu-item>
-        <el-menu-item index="3" disabled>
+        <el-menu-item index="3" >
           <i class="el-icon-document"></i>
-          <span slot="title">导航三</span>
+          <span slot="title">公交路线</span>
         </el-menu-item>
         <el-menu-item index="4">
           <i class="el-icon-setting"></i>
@@ -39,9 +41,13 @@
 </template>
 
 <script>
-    export default {
-        name: "admin"
+  import AdminHeader from './AdminHeader'
+  export default {
+    name: "admin",
+    components: {
+      AdminHeader
     }
+  }
 </script>
 
 <style scoped lang="stylus">

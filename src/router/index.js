@@ -6,7 +6,7 @@ import Transfer from '../components/Transfer'
 import LineSearch from '../components/LineSearch'
 import Station from '../components/Station'
 import User from '../components/User'
-import Admin from '../components/Admin'
+import Admin from '../components/admin/Admin'
 Vue.use(Router)
 
 export default new Router({

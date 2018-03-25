@@ -1,12 +1,14 @@
 <template>
   <div>
     <div ref="item" class="route-item">
+
       <h3>
         <span v-for="(item, index) in busArray" :key="index"  class="line busline">
           <span class="beforespanbus"></span>
           {{item}}
           <span v-if="index!==busArray.length-1" class="afterspan">></span>
         </span>
+        <!--<span class="linename">({{transferForm}}&#45;&#45;{{transferTo}})</span>-->
        <!-- <span class="line subwayline subwayline2">
           <span class="beforespansubway"></span>
           地铁2号线
@@ -18,7 +20,8 @@
           <span class="afterspan"> </span>
         </span>-->
       </h3>
-      <p>{{getTime(itemData.time)}}（{{(itemData.distance/1000).toFixed(2)}}公里）|步行{{itemData.walking_distance}}米|<span class="red">{{itemData.cost}}元</span> </p>
+
+      <p>{{getTime(itemData.time)}}（{{(itemData.distance/1000).toFixed(2)}}公里）|步行{{itemData.walking_distance}}米|<span class="red">{{itemData.cost}}元</span>| <span class="linename">{{transferForm}}--{{transferTo}}</span></p>
       <div class="sidebar">
         <div class="el-icon-arrow-down" href="javascript:void(0)">
           <span class="aftera"></span>
@@ -97,7 +100,8 @@
       "start_latitude",
       "end_longitude",
       "end_latitude",
-      "isCollected"
+      "isCollected",
+      "collection_id"
     ],
     data(){
       return {
@@ -158,33 +162,47 @@
        * @param event
        */
       collection(){
-        if (!person.user_id){
+        if (!this.person.user_id){
+          this.$message({
+            showClose: true,
+            message: '请先登录...',
+            type: 'error'
+          })
           return false
         }
 
         this.collectionData = {
-          'start_point(string)': this.transferForm,
-          'end_point(string)': this.transferTo,
-          'start_longitude(string)': this.start_longitude,
-          'start_latitude(string)': this.start_latitude,
-          'end_longitude(string)': this.end_longitude,
-          'end_latitude(string)': this.end_latitude,
-          'area(string)': '成都',
-          'route_information(varchar(200))': '',
-          'user_id(int)': person.user_id
+          'start_point': this.transferForm,
+          'end_point': this.transferTo,
+          'start_longitude': this.start_longitude,
+          'start_latitude': this.start_latitude,
+          'end_longitude': this.end_longitude,
+          'end_latitude': this.end_latitude,
+          'area': '成都',
+          'route_information': '',
+          'user_id': this.person.user_id
         }
-        this.collectionData['route_information(varchar(200))'] = JSON.stringify(this.busArray)
+        this.collectionData['route_information'] = JSON.stringify(this.busArray)
         let data = Qs.stringify(this.collectionData)
         this.$http.post('/api/collection/add.do',data ,
           {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
         )
           .then(res => {
             console.log(res.data)
-            this.$message({
-              showClose: true,
-              message: '收藏成功',
-              type: 'success'
-            })
+            if (res.data.code ==1 ){
+              this.$message({
+                showClose: true,
+                message: '收藏成功',
+                type: 'success'
+              })
+            }else{
+              this.$message({
+                showClose: true,
+                message: this.res.data.code,
+                type: 'error'
+              })
+            }
+
           })
           .catch(err => {
             console.log(err)
@@ -195,8 +213,42 @@
             })
           })
       },
+      /**
+       * 删除收藏路线
+       */
       deleteCollection(){
         console.log('删除')
+        console.log(this.collection_id)
+        let data = Qs.stringify({collection_id: this.collection_id })
+        this.$http.post('/api/collection/delete.do',data,
+          {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+        ).then(res => {
+          console.log(res.data)
+          if (res.data.code = 1){
+            this.$emit('delete', this.collection_id)
+            this.$message({
+              showClose: true,
+              message: '删除成功',
+              type: 'success'
+            })
+
+
+          }else{
+            this.$message({
+              showClose: true,
+              message: '删除失败',
+              type: 'error'
+            })
+          }
+        }).catch(err => {
+            console.log(err)
+            this.$message({
+              showClose: true,
+              message: '删除失败',
+              type: 'error'
+            })
+          })
+
       }
 
     },
@@ -366,5 +418,8 @@
     content ""
     visibility hidden
     height 0
-
+  .linename
+    margin-left 5px
+    font-weight bolder
+    font-size 12px
 </style>

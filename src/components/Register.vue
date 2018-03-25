@@ -64,7 +64,7 @@
           return {
             formLabelWidth: '120px',
             form: {
-              username: '念念公子',
+              username: 'admin',
               password: '123456',
               checkPass: '123456',
               gender: '1',

@@ -44,12 +44,21 @@
             {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
           ).then(res => {
             console.log(res.data)
-            this.$store.commit('login',res.data.data)
-            this.$message({
-              showClose: true,
-              message: '登录成功',
-              type: 'success'
-            })
+            if (res.data.code == 1){
+              this.$store.commit('login',res.data.data)
+              this.$message({
+                showClose: true,
+                message: '登录成功',
+                type: 'success'
+              })
+            }else {
+              this.$message({
+                showClose: true,
+                message: '登录失败',
+                type: 'error'
+              })
+              console.log(res.data.message)
+            }
           }).catch(err => {
             console.log(err)
             this.$message({

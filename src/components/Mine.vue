@@ -5,7 +5,7 @@
         <el-button  @click="dialogRegVisible = true" v-if="!isLogin" class="btn" type="primary">注册</el-button>
       </div>
 
-      <span v-if="isLogin" class="welcome">欢迎念念公子</span>
+      <span v-if="isLogin" class="welcome">欢迎: {{person.username}}</span>
       <el-tabs class="tabs" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="最近路线" name="first">
           <div>
@@ -45,7 +45,8 @@
 </template>
 
 <script>
-    import LateLine from './LateLine'
+  import { mapGetters } from 'vuex'
+  import LateLine from './LateLine'
     import Collection from './Collection'
     import CommonAddress from './CommonAddress'
     import Notice from './Notice'
@@ -73,9 +74,11 @@
           }
         },
         computed: {
-          isLogin(){
-            return this.$store.state.isLogin
-          }
+          ...mapGetters([
+            'isLogin',
+            'person'
+          ])
+
         },
         methods: {
           handleClick(tab, event) {
