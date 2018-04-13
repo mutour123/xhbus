@@ -303,7 +303,7 @@
   .route-item:hover .sidebar
       display block
   .beforespanbus,.beforespansubway
-    background-image url("../../static/diricon_81.gif")
+    background-image url("../../static/image/diricon_81.gif")
     background-position 50% 50%
     vertical-align bottom
     display inline-block
@@ -372,28 +372,28 @@
   .beforedtstart,.beforedtwalk,.beforedtbus,.beforedtsubway,.beforedtend
     display inline-block
     z-index 9
-    background-image url("../../static/diricon_78.gif")
+    background-image url("../../static/image/diricon_78.gif")
     background-position center
     float left
     vertical-align middle
     width 30px
     height 30px
   .beforedtwalk
-    background-image url("../../static/diricon_59.gif")
+    background-image url("../../static/image/diricon_59.gif")
   .beforedtbus
     float left
     width 30px
     /*border 1px #fff solid*/
     height 29px
-    background-image url("../../static/diricon_81.gif")
+    background-image url("../../static/image/diricon_81.gif")
   .beforedtsubway
-    background-image url("../../static/diricon_83.gif")
+    background-image url("../../static/image/diricon_83.gif")
     width 30px
     height 30px
     margin-left 2px
 
   .beforedtend
-    background-image url("../../static/diricon_80.gif")
+    background-image url("../../static/image/diricon_80.gif")
   .afterdt,.afterdtstart
     position absolute
     top 24px

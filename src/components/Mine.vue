@@ -9,12 +9,16 @@
       <el-tabs class="tabs" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="最近路线" name="first">
           <div>
-            <component v-bind:is="currentView.LateLine"></component>
+            <keep-alive>
+              <component v-bind:is="currentView.LateLine"></component>
+            </keep-alive>
           </div>
         </el-tab-pane>
         <el-tab-pane label="收藏路线" name="second">
           <div>
-            <component v-bind:is="currentView.Collection"></component>
+            <keep-alive>
+              <component v-bind:is="currentView.Collection"></component>
+            </keep-alive>
           </div>
         </el-tab-pane>
         <el-tab-pane label="常用地址" name="third">
@@ -29,7 +33,9 @@
         </el-tab-pane>-->
         <el-tab-pane v-if="isLogin" label="个人设置" name="five">
           <div>
-            <component v-bind:is="currentView.Setting"></component>
+            <keep-alive>
+              <component v-bind:is="currentView.Setting"></component>
+            </keep-alive>
           </div>
         </el-tab-pane>
       </el-tabs>

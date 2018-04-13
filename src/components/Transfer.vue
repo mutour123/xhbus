@@ -12,13 +12,17 @@
         </div>
       </div>
       <div class="switchCon" >
-        <span class="switch" :style="background" @click="switchInput" id="switch"></span>
+        <span class="switch noselect" :style="background" @click="switchInput" id="switch"></span>
       </div>
       <div>
         <el-button class="searchButton" type="primary" @click="search" icon="el-icon-search">搜索</el-button>
       </div>
     </div>
-    <div>
+    <div class="detail">
+      <div  class="loadingCon" ref="loadingCon">
+        <img class="loading" src="../../static/image/timg2.gif" alt="加载中">
+        <span class="loadingText">加载中......</span>
+      </div>
       <panel
         :transferResult="searchResult"
         :isCollected=false
@@ -40,10 +44,10 @@
           return{
             background:{},
             img1:{
-              background: "url("+require('../../static/switch.back.png')+")"
+              background: "url("+require('../../static/image/switch.back.png')+")"
             },
             img2: {
-              background: "url("+require('../../static/switch_act.back.png')+")"
+              background: "url("+require('../../static/image/switch_act.back.png')+")"
             },
             transferValue: {//输出框的内容
               start: "西华大学西大门站",
@@ -62,10 +66,14 @@
           this.background = this.background == this.img1 ? this.img2 : this.img1
         },
         search(){
+          $(this.$refs.loadingCon).css("display", "block")
+          //在这里写一个加载动画
           this.$store.state.AMap.transfer.search([{keyword: this.transferValue.start},{keyword: this.transferValue.end}], (status, result)=>{
             //  解析返回结果，自己生成操作界面和地图展示界面
             if(status === 'complete' && result.info === 'OK'){
               console.log(result)
+              $(this.$refs.loadingCon).css("display", "none")
+
               this.searchResult = result
               //此时的唯一组件是
               // console.log(JSON.stringify(result))
@@ -110,4 +118,38 @@
   .searchButton
     margin-top 40px
     margin-left 20px
+  .detail
+    min-height 300px
+    position relative
+  .loadingCon
+    z-index 100
+    background-color rgba(255, 255, 255, .5)
+    position absolute
+    top 0
+    bottom 0
+    left 0
+    right 0
+    text-align center
+    display none
+    .loadingText
+      display block
+      position absolute
+      top 50%
+      color #c1c1c1
+      left 50%
+      padding-left 23px
+      margin-left -50px
+      text-align center
+    .loading
+      width 100px
+      display block
+      margin auto
+      position relative
+      top 50%
+      margin-top -100px
+
+
+
+  .noselect//禁止选中
+    user-select none
 </style>

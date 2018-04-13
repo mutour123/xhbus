@@ -25,7 +25,7 @@
       data(){
         return {
           form: {
-            account: '念念公子',
+            account: '小木',
             password: '123456'
           },
           formLabelWidth: '120px',

@@ -4,7 +4,7 @@
         <h1>RoutePlaner管理</h1>
       </div>
       <div class="user">
-        <p class="login" v-if="isLogin">欢迎{{username}}</p>
+        <p class="login" v-if="isLogin">欢迎：{{username}}</p>
         <p class="login" v-else>登录</p>
       </div>
     </div>
@@ -29,6 +29,8 @@
   .log
     width 300px
     padding 10px
+    h1
+      font-family '仿宋'
   .user
     flex-grow 1
   .login

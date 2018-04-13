@@ -67,7 +67,7 @@
       display inline-block
       i
         background-size cover
-        background-image  url("../../static/circle_line.gif")
+        background-image  url("../../static/image/circle_line.gif")
         display inline-block
         font-style normal
         word-wrap normal

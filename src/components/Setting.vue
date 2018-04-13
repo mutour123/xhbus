@@ -4,16 +4,18 @@
     <div class="headimg">
       <div>
         <div>
-          <img :src="headimg" class="image" ref="headimg" alt="">
+          <img :src="head_portrail.head_portrail" class="image" ref="headimg" alt="">
         </div>
         <div class="test-button">
           <label class="btn lab-input" for="uploads" >选择</label>
           <input type="file" id="uploads" class="myfile" accept="image/*" @change="loadImg($event)">
         </div>
       </div>
+
+
     </div>
     <!--基本信息-->
-    <div>
+    <div class="baseInfo">
       <el-form :model="form"  ref="ruleForm2">
         <el-form-item required label="用户名:" :label-width="formLabelWidth">
           <el-input v-model="person.username" placeholder="请输入用户名" auto-complete="off"></el-input>
@@ -35,7 +37,7 @@
         </el-form-item>
         <div class="clearfloat">
           <div class="mbtncon">
-            <el-button @click="dialogRegVisible = false">取 消</el-button>
+            <!--<el-button @click="dialogRegVisible = false">取 消</el-button>-->
             <el-button type="primary" @click="modifyHhander">修改</el-button>
           </div>
         </div>
@@ -46,8 +48,17 @@
       title="剪切"
       :visible.sync="dialogVisible">
       <div class="clippingcon">
-        <img :src="selectedImgUrl"
-             class="clipping" ref="headimg1" alt="">
+        <div class="clipping">
+          <vueCropper
+            ref="cropper"
+            :img="selectedImgUrl"
+            :autoCrop = "true"
+            :canMove = "option.canMove"
+            :canMoveBox = "true"
+            :fixedNumber = "option.fixedNumber"
+            :fixedBox = "option.fixed"
+          ></vueCropper>
+        </div>
       </div>
       <div class="btncon">
         <el-button class="cancel" @click = 'cancelHander'>取消</el-button>
@@ -60,41 +71,41 @@
 <script>
   import vueCropper from 'vue-cropper'
   import { mapGetters } from 'vuex'
+  import Qs from 'qs'
   export default {
     name: "setting",
-    data() {
-      return {
-        formLabelWidth: '120px',
-        form: {
-          username: '念念公子',
-          gender: '男',
-          birthday: '2018-3-22',
-          introduce: '这个人很懒，什么也没有留下',
-          telphone: '12345678910'
-        },
-        dialogVisible: false,
-        selectedImgUrl: '',
-        cropper: {},//裁剪对象
-        headimg: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1693588259,1862034499&fm=58&u_exp_0=1126554644,1528729089&fm_exp_0=86&bpow=320&bpoh=480',
-        option: {
-          aspectRatio: 3 / 4,//裁剪框比例 1：1
-          viewMode : 1,//显示
-          guides :false,//裁剪框虚线 默认true有
-          dragMode : "move",
-          background : true,// 容器是否显示网格背景
-          movable : true,//是否能移动图片
-          cropBoxMovable :false,//是否允许拖动裁剪框
-          cropBoxResizable :false,//是否允许拖动 改变裁剪框大小
-          minContainerHeight : 400,
-          minContainerWidth : 300
-        }
-      }
-    },
     computed: {
       ...mapGetters([
         'person'
       ])
     },
+    data() {
+      return {
+        option: {
+          size: 1,
+          full: false,
+          outputType: 'png',
+          canMove: true,
+          fixedBox: false,
+          original: false,
+          canMoveBox: true,
+          canScale: true,
+          autoCrop: true,
+          fixed: true,
+          fixedNumber: [3, 4]
+        },
+        vueCropper: vueCropper,
+        formLabelWidth: '120px',
+        form: {},
+        dialogVisible: false,
+        selectedImgUrl: '../../static/meinv.jpg',
+        head_portrail: {
+          user_id: 1,
+          head_portrail: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1693588259,1862034499&fm=58&u_exp_0=1126554644,1528729089&fm_exp_0=86&bpow=320&bpoh=480',
+        }
+      }
+    },
+
     components: {
       vueCropper
     },
@@ -103,45 +114,52 @@
        * 修改
        */
       modifyHhander(){
-        this.$http.post('/api/modify',this.form).then(res => {
+        delete this.form.password
+        console.log(this.form)
+        let data = Qs.stringify(this.form)
+        let data1 = Qs.stringify(this.head_portrail)
+        this.$http.post('/api/user/modify.do', data)
+          .then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+        })
+        /*Promise.all([
+          this.$http.post('/api/user/modify.do', data),
+          this.$http.post('/api/user/modify/head_portrail.do',data1
+            // {headers: {'Content-Type': 'multipart/form-data'}}
+          )
+        ]).then(res => {
           this.$message({
             showClose: true,
             message: '修改成功',
             type: 'success'
           })
         }).catch(err => {
+          console.log(err)
           this.$message({
             showClose: true,
             message: '修改失败',
             type: 'error'
           })
-        })
+        })*/
       },
       /**
        * 确认裁剪
        */
       suerHander(){
-        let canvas = this.cropper.getCroppedCanvas({
-          width: 90,
-          height: 120
+        this.$refs.cropper.getCropData((data) => {
+          console.log(data)
+          this.head_portrail.head_portrail = data
+          this.$refs.cropper.clearCrop()
+          this.dialogVisible = false
         })
-        this.cropper.destroy()
-        this.cropper = null
-        let image1 = this.$refs.headimg1
-        $(image1).attr('src','')
-        this.dialogVisible = false
-        // let image = this.$refs.headimg
-        // $(image).attr('src', canvas.toDataURL() )
-        this.headimg = canvas.toDataURL()
       },
       /**
        * 取消裁剪
        */
       cancelHander(){
-        this.cropper.destroy()
-        this.cropper = null
-        let image1 = this.$refs.headimg1
-        $(image1).attr('src','')
+        this.$refs.cropper.clearCrop()
         this.dialogVisible = false
       },
       /**
@@ -153,16 +171,15 @@
         let reader = new FileReader()
         let _this = this
         reader.readAsDataURL(file)
-        let image1 = this.$refs.headimg1
         reader.onload =function(){
           _this.dialogVisible = true
-          // _this.selectedImgUrl = this.result
-          $(image1).attr('src', this.result )
-          // console.log(image1)
-          //初始化cropper
-          _this.cropper = new Cropper(image1, _this.option)
+          _this.selectedImgUrl = this.result
         }
       },
+    },
+    mounted(){
+      this.form = this.person
+      this.head_portrail.user_id = this.person.user_id
     }
   }
 </script>
@@ -173,9 +190,9 @@
     display flex
     .headimg
       position relative
-      width 90px
+      width 210px
       padding 2px
-      height 150px
+      height 320px
       border 1px silver solid
     .myfile
       display none
@@ -203,7 +220,6 @@
         div
           padding 5px
         .label
-          /*background-color red*/
           text-align right
           width 100px
         .content
@@ -214,8 +230,8 @@
     justify-content center
     .clipping
       align-items center
-      max-width 80%
-      max-height 400px
+      height 400px
+      width 300px
   .cancel
     margin-left 20%
   .sure
@@ -232,6 +248,10 @@
     visibility hidden
     height 0
   .image
-    width 90px
-    height 120px
+    width 210px
+    height 280px
+  .baseInfo
+    margin-left 20px
+    flex-grow 1
+
 </style>

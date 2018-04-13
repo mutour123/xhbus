@@ -4,20 +4,28 @@
      <el-input class="stationInput" v-model="stationValue" placeholder="站点名称，如“西华大学南大门站”" clearable></el-input>
      <el-button class="searchButton" @click="search" type="primary" icon="el-icon-search">搜索</el-button>
    </div>
-   <div v-if="stationBusAll.length">
-     <div class="lineall">
-       <div class="imgcon">
-         <img src="../../static/10.jpg" alt="bus">
-       </div>
-       <div class="linealldetail">
-         <h3>{{stationResult.stationInfo[0].name}}<span>途径路线{{stationBusAll.length}}条</span></h3>
-         <ul>
-           <li v-for="item in stationBusAll">{{item}}</li>
-         </ul>
-       </div>
+   <div class="detail">
+
+     <div  class="loadingCon" ref="loadingCon">
+       <img class="loading" src="../../static/image/timg2.gif" alt="加载中">
+       <span class="loadingText">加载中......</span>
      </div>
-     <div class="linedetail">
-       <line-base class="linebasecon" v-for="(item, index) in stationLine" :key="index" :via_stops="item.via_stops" :lineName="item.lineName"></line-base>
+
+     <div v-if="stationBusAll.length">
+       <div class="lineall">
+         <div class="imgcon">
+           <img src="../../static/image/10.jpg" alt="bus">
+         </div>
+         <div class="linealldetail">
+           <h3>{{stationResult.stationInfo[0].name}}<span>途径路线{{stationBusAll.length}}条</span></h3>
+           <ul>
+             <li v-for="item in stationBusAll">{{item}}</li>
+           </ul>
+         </div>
+       </div>
+       <div class="linedetail">
+         <line-base class="linebasecon" v-for="(item, index) in stationLine" :key="index" :via_stops="item.via_stops" :lineName="item.lineName"></line-base>
+       </div>
      </div>
    </div>
  </section>
@@ -49,9 +57,13 @@
         },
         methods:{
             search(){
+              $(this.$refs.loadingCon).css("display", "block")
+
               this.$store.state.AMap.stationSearch.search(this.stationValue, (status, result)=>{
                 if(status === 'complete' && result.info === 'OK'){
                   console.log(result)
+                  $(this.$refs.loadingCon).css("display", "none")
+
                   this.stationResult = result
                 }else{
                   console.log(result)
@@ -135,5 +147,34 @@
   .linebasecon
     border-bottom 1px salmon solid
 
+  .detail
+    min-height 300px
+    position relative
+  .loadingCon
+    z-index 100
+    background-color rgba(255, 255, 255, .5)
+    position absolute
+    top 0
+    bottom 0
+    left 0
+    right 0
+    text-align center
+    display none
+    .loadingText
+      display block
+      position absolute
+      top 50%
+      color #c1c1c1
+      left 50%
+      padding-left 23px
+      margin-left -50px
+      text-align center
+    .loading
+      width 100px
+      display block
+      margin auto
+      position relative
+      top 50%
+      margin-top -100px
 
 </style>

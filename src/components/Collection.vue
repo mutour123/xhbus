@@ -47,11 +47,18 @@
     methods: {
       deleteCollection(data) {
         console.log("collection里触发的事件"+data)
+        let index = -1
         for (let i = 0; i< this.searchResultArr.length; i++ ){
           if (data == this.searchResultArr[i].plans[0].collection_id){//就是这个item，发送删除的信息
+            index = i
             break;
           }
-       }
+        }
+        console.log(11111)
+        if (index != -1) {
+          console.log(222222)
+          this.searchResultArr.splice(index, 1)
+        }
       }
     },
     async mounted(){
@@ -67,7 +74,7 @@
         console.log(collectionData.data.message)
         return
       }
-        console.log(collectionData.data)
+      console.log(collectionData.data)
       /*  this.lateline = [
         {
           originName: "西华大学西大门",
@@ -102,13 +109,19 @@
                 let pattern = /(\w+路)|地铁\w号线/
                 let bus = result.plans[j].segments[i].instruction
                 let match = pattern.exec(bus)
+                // console.log(match[0])
                 busArray.push(match[0])
               }
+              console.log(item.route_information.toString())
+              console.log(busArray.toString())
               if (item.route_information.toString() == busArray.toString()) {
+                console.log("j为："+ j)
                 index = j//这条记录的索引
                 break
               }
             }
+            console.log(index)
+
             if (index != -1){//正确找到结果
               result.plans[index].collection_id = item.collection_id
               result.plans = [result.plans[index]]//将正确的result.plans找到

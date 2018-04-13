@@ -7,36 +7,31 @@
       <el-menu
         default-active="2"
         class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
+        router
         background-color="#303133"
         text-color="#fff"
         active-text-color="#ffd04b">
-        <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span>导航一</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-menu-item index="2">
+        <el-menu-item index="/cooperationMng">
           <i class="el-icon-menu"></i>
-          <span slot="title">导航二</span>
+          <span slot="title">第三方合作</span>
         </el-menu-item>
-        <el-menu-item index="3" >
+        <el-menu-item index="/travelmng">
+          <i class="el-icon-menu"></i>
+          <span slot="title">出行情况</span>
+        </el-menu-item>
+        <el-menu-item index="/buslinemng" >
           <i class="el-icon-document"></i>
-          <span slot="title">公交路线</span>
+          <span slot="title">管理员</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="/usermng">
           <i class="el-icon-setting"></i>
           <span slot="title">用户管理</span>
         </el-menu-item>
       </el-menu>
     </nav>
-    <main>main</main>
+    <main>
+      <router-view></router-view>
+    </main>
   </div>
 </template>
 
@@ -63,7 +58,10 @@
     nav
       background-color #303133
     main
-      min-height calc(100vh - 100px)
+      height calc(100vh - 100px)
+      padding 10px
+      box-sizing border-box
+      overflow auto
     .el-menu
       border 0
 
