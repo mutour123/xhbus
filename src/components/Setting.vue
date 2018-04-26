@@ -104,8 +104,8 @@
         dialogVisible: false,
         selectedImgUrl: '../../static/meinv.jpg',
         head_portrail: {
-          // head_portrail: '../../static/headdfault.jpg',
-          head_portrail: 'http:/120.77.170.124:8080/busis/upload/imgs/20180424/1524578439971_517.jpg',
+          head_portrail: '../../static/headdfault.jpg',
+          // head_portrail: 'http://120.77.170.124:8080/busis/upload/imgs/20180424/1524578439971_517.jpg',
         }
       }
     },
@@ -229,8 +229,9 @@
     mounted(){
       this.form = this.person
       console.log("testtesttestst")
-      if (this.person.head_portrail){
-        // this.head_portrail.head_portrail = JSON.parse(this.person.head_portrail)
+      console.log(this.person.head_portrail)
+      if (this.person.head_portrail != " "){
+        this.head_portrail.head_portrail = JSON.parse(this.person.head_portrail)
       }
     }
   }
