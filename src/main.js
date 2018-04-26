@@ -12,13 +12,17 @@ import store from './store'
 
 //引入自定义指令修饰器
 import toggle from './diretives/toggle'
+import twotoggle from './diretives/twotoggle'
+import showList from './diretives/showList'
 Vue.directive('toggle', toggle)
+Vue.directive('twotoggle', twotoggle)
+Vue.directive('showlist', showList)
 
 Vue.use(ElementUI)
 
 Vue.prototype.$http = Axios
+Axios.defaults.withCredentials = true
 Vue.config.productionTip = false
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

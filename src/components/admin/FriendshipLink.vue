@@ -15,12 +15,12 @@
                 width="60">
               </el-table-column>
               <el-table-column
-                prop="title"
+                prop="name"
                 label="网站名称"
                 width="150">
               </el-table-column>
               <el-table-column
-                prop="href"
+                prop="url"
                 label="链接"
                 width="250">
               </el-table-column>
@@ -41,7 +41,7 @@
                   <el-input v-model="formLabelAlign.name" placeholder="如：西华大学"></el-input>
                 </el-form-item>
                 <el-form-item label="链接地址">
-                  <el-input v-model="formLabelAlign.address" placeholder="如：http://www.xhu.edu.cn/"></el-input>
+                  <el-input v-model="formLabelAlign.url" placeholder="如：http://www.xhu.edu.cn/"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="onSubmit">添加</el-button>
@@ -55,57 +55,69 @@
 </template>
 
 <script>
+  import Qs from 'qs'
+
   export default {
     name: "friendship-link",
     data(){
       return {
-        friendshipLink: [
-          {
-            title: "西华大学",
-            href: "http://www.xhu.edu.cn/"
-          },
-          {
-            title: "高德地图",
-            href: "https://www.amap.com/"
-          },
-          {
-            title: "易班",
-            href: "http://www.yiban.cn/"
-          },
-          {
-            title: "西华大学",
-            href: "http://www.xhu.edu.cn/"
-          },
-          {
-            title: "高德地图",
-            href: "https://www.amap.com/"
-          },
-          {
-            title: "易班",
-            href: "http://www.yiban.cn/"
-          },
-          {
-            title: "西华大学",
-            href: "http://www.xhu.edu.cn/"
-          },
-          {
-            title: "高德地图",
-            href: "https://www.amap.com/"
-          },
-          {
-            title: "易班",
-            href: "http://www.yiban.cn/"
-          }
-        ],
+        friendshipLink: [],
         formLabelAlign: {
           name: '微力实验室',
-          address: 'www.weilylab.com',
+          url : 'www.weilylab.com',
         }
       }
     },
     methods: {
       onSubmit(){
-        // this.hrefTitle.push(this.formLabelAlign.name)
+        let data = Qs.stringify(this.formLabelAlign)
+        this.$http.post('/api/admin/link/add.do',
+          data,
+          {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+        ).then(res => {
+          if (res.data.code == 1){
+            this.friendshipLink.push(this.formLabelAlign)
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      },
+      handleSearchDelete(index, row){
+        let data = Qs.stringify({
+          name: row.name,
+          url: row.url
+        })
+        this.$http.post('/api/admin/link/delete.do',
+          data,
+          {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+        ).then(res => {
+          console.log(res.data)
+          if (res.data.code ==1) {
+            this.friendshipLink.splice(index, 1)
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    mounted(){
+      {//获取友情链接的数据
+        this.$http.get('/api/admin/link/getall.do')
+          .then(res => {
+            if (res.data.code == 1){
+              this.friendshipLink = res.data.data.filter(item => {
+                if(item.url != "景点"){
+                  return item
+                }
+              })
+            }
+            console.log(res.data)
+
+          })
+          .catch(err => {
+            console.log(err)
+          })
+
       }
     }
   }

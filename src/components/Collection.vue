@@ -44,6 +44,83 @@
         'person'
       ])
     },
+    watch: {
+      async isLogin(newIsLogin){
+        if (newIsLogin == true){
+          console.log('denlgu')
+
+          if (!this.person.user_id){
+            return
+          }
+          this.form.user_id = this.person.user_id
+          let data = Qs.stringify(this.form)
+          //发起请求得到数据,得到收藏路线的信息
+          let collectionData = await promise.getCollection(this.$http, data)
+          if (collectionData.data.code !== 1){
+            console.log(collectionData.data.message)
+            return
+          }
+          console.log(collectionData.data)
+          /*  this.lateline = [
+            {
+              originName: "西华大学西大门",
+              destinationName: "天府三街",
+              busAll: [
+                "723路",
+                "地铁2号线",
+                "地铁1号线"
+              ]
+            },
+            {
+              originName: "西华大学西大门",
+              destinationName: "犀浦快铁站",
+              busAll: [
+                "726路",
+                "708路"
+              ]
+            }
+          ]*/
+          this.lateline = collectionData.data.data
+
+          //发起请求，获取最近路线的信息,并处理得到想要的结果
+          this.lateline.forEach((item, index) => {
+            this.$store.state.AMap.transfer.search([{keyword: item.start_point}, {keyword: item.end_point}], (status, result) => {
+              if (status === 'complete' && result.info === 'OK') {
+                let index = -1;
+                for (let j = 0; j < result.plans.length; j++) {
+                  let busArray = []
+                  for (let i = 0; i < result.plans[j].segments.length; i++) {
+                    if (result.plans[j].segments[i].transit_mode === 'WALK')
+                      continue
+                    let pattern = /(\w+路)|地铁\w号线/
+                    let bus = result.plans[j].segments[i].instruction
+                    let match = pattern.exec(bus)
+                    // console.log(match[0])
+                    busArray.push(match[0])
+                  }
+                  console.log(item.route_information.toString())
+                  console.log(busArray.toString())
+                  if (item.route_information.toString() == busArray.toString()) {
+                    console.log("j为："+ j)
+                    index = j//这条记录的索引
+                    break
+                  }
+                }
+                console.log(index)
+
+                if (index != -1){//正确找到结果
+                  result.plans[index].collection_id = item.collection_id
+                  result.plans = [result.plans[index]]//将正确的result.plans找到
+                  this.searchResultArr.push(result)
+                }
+              }else {//请求失败
+                console.log(result)
+              }
+            })
+          })
+        }
+      }
+    },
     methods: {
       deleteCollection(data) {
         console.log("collection里触发的事件"+data)

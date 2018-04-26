@@ -7,13 +7,13 @@
 
       <span v-if="isLogin" class="welcome">欢迎: {{person.username}}</span>
       <el-tabs class="tabs" v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="最近路线" name="first">
-          <div>
-            <keep-alive>
-              <component v-bind:is="currentView.LateLine"></component>
-            </keep-alive>
-          </div>
-        </el-tab-pane>
+        <!--<el-tab-pane label="最近路线" name="first">-->
+          <!--<div>-->
+            <!--<keep-alive>-->
+              <!--<component v-bind:is="currentView.LateLine"></component>-->
+            <!--</keep-alive>-->
+          <!--</div>-->
+        <!--</el-tab-pane>-->
         <el-tab-pane label="收藏路线" name="second">
           <div>
             <keep-alive>
@@ -26,11 +26,11 @@
             <component v-bind:is="currentView.Address"></component>
           </div>
         </el-tab-pane>
-      <!--  <el-tab-pane label="通知" name="fourth">
+        <el-tab-pane label="公告" name="fourth">
           <div>
             <component v-bind:is="currentView.Notice"></component>
           </div>
-        </el-tab-pane>-->
+        </el-tab-pane>
         <el-tab-pane v-if="isLogin" label="个人设置" name="five">
           <div>
             <keep-alive>

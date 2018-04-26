@@ -3,6 +3,11 @@ const mutations = {
     state.isLogin = true
     state.person = person
   },
+  adminLogin(state, adminPerson) {
+    state.adminIsLogin = true
+    state.adminPerson = adminPerson
+
+  },
   setMap(state, map) {
     state.map = map
   },
@@ -14,6 +19,9 @@ const mutations = {
   },
   setSearchMap(state, map){
     state.searchMap = map
+  },
+  changeTransferPolicy(state, transferPolicy) {
+    state.transferPolicy = transferPolicy
   }
 }
 export default mutations

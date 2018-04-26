@@ -1,6 +1,5 @@
 <template>
     <div>
-
       <div style="overflow: hidden;" class="searchDiv">
         <el-carousel :interval="5000" arrow="always">
           <el-carousel-item >
@@ -11,8 +10,9 @@
           </el-carousel-item>
         </el-carousel>
         <div class="searchCon">
-          <el-input v-model="input" placeholder="请输入内容"></el-input>
-          <el-button class="searchBtn">搜索</el-button>
+          <h2>欢迎来到西华BuS</h2>
+          <!--<el-input v-model="input" placeholder="请输入内容"></el-input>-->
+          <!--<el-button class="searchBtn">搜索</el-button>-->
         </div>
       </div>
 
@@ -21,8 +21,8 @@
           <span>酒店预定</span>
           <ul class="clearfloat hotle" >
             <li v-for="(item, index) in hotle" :key="index">
-              <img :src="item.imgSrc" alt="酒店图片">
-              <h6>{{item.name}}</h6>
+              <img class="img" :src="item.imgSrc" alt="酒店图片">
+              <h6 class="hotolTitle"><a :href="item.href">{{item.name}}</a></h6>
             </li>
           </ul>
         </div>
@@ -30,7 +30,7 @@
           <span>热门景点</span>
           <ul class="clearfloat hotBus" >
             <li v-for="(item, index) in scenicSpot" :key="index">
-              {{item}}
+              {{item.name}}
             </li>
           </ul>
         </div>
@@ -68,56 +68,43 @@
     data() {
       return {
         input: "",
-        scenicSpot: [
-          "杭州西湖",
-          "黄山",
-          "颐和园",
-          "丽江古城",
-          "泰山",
-          "武当山",
-          "上海东方明珠",
-          "大理",
-          "四川峨眉山",
-          "西藏布达拉宫",
-          "桂林漓江",
-          "北京水立方",
-          "长江三峡",
-          "长白山",
-          "黄果树瀑布",
-          "武夷山",
-          "西华大学",
-          "五台山",
-          "蓬莱八仙过海",
-        ],
+        scenicSpot: [],
         hotle: [
           {
             name: '威斯汀酒店',
-            imgSrc: '../../static/hotelimg/0e726cf3.jpg'
+            imgSrc: '../../static/hotelimg/1980d2d0.jpg',
+            href: 'http://www.starwoodhotels.com/westin/index.html'
           },
           {
             name: '格林酒店',
-            imgSrc: '../../static/hotelimg/0e726cf3.jpg'
+            imgSrc: '../../static/hotelimg/bfc8a617.jpg',
+            href: 'http://www.998.com/shtml/99/zh/index.html'
           },
           {
             name: '喜来登酒店',
-            imgSrc: '../../static/hotelimg/0e726cf3.jpg'
+            imgSrc: '../../static/hotelimg/0e726cf3.jpg',
+            href: 'http://www.starwoodhotels.com/sheraton/index.html?language=zh_CN'
           },
           {
             name: '汉庭快捷酒店',
-            imgSrc: '../../static/hotelimg/0e726cf3.jpg'
+            imgSrc: '../../static/hotelimg/1343371910.jpg',
+            href: 'http://www.huazhu.com/hanting'
           },
           {
             name: '七天连锁酒店',
-            imgSrc: '../../static/hotelimg/0e726cf3.jpg'
+            imgSrc: '../../static/hotelimg/1343130747.jpg',
+            href: 'http://www.7daysinn.cn/'
           }
           ,
           {
-            name: '汉庭快捷酒店',
-            imgSrc: '../../static/hotelimg/0e726cf3.jpg'
+            name: '速8酒店',
+            imgSrc: '../../static/hotelimg/1344418647.jpg',
+            href: 'http://www.super8.com.cn/'
           },
           {
-            name: '七天连锁酒店',
-            imgSrc: '../../static/hotelimg/0e726cf3.jpg'
+            name: '锦江之星',
+            imgSrc: '../../static/hotelimg/1344242916.jpg',
+            href: 'http://www.jinjianginns.com/'
           }
         ],
         consultation: [
@@ -312,6 +299,25 @@
         let match = pattern.exec($(e.target).text().trim())
         this.$store.commit('changeLocal', match[1])
       }
+    },
+    mounted(){
+      {
+        this.$http.get('/api/admin/link/getall.do')
+          .then(res => {
+            if (res.data.code == 1) {
+              console.log(res.data)
+              let result = res.data.data
+              this.scenicSpot = result.filter(item => {
+                if (item.url == "景点") {
+                  return item.name
+                }
+              })
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
   }
 </script>
@@ -366,6 +372,9 @@
     transform translate(-50%, -50%)
     z-index 99
     width 60%
+    h2
+      width 100%
+      text-align center
     .searchBtn
       height 40px
   .clearfloat:after
@@ -374,5 +383,9 @@
     content ""
     visibility hidden
     height 0
-
+  .img
+    border 1px solid #c1c1c1
+  .hotolTitle
+    text-align center
+    margin-top 0
 </style>

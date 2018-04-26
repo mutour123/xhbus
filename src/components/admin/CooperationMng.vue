@@ -3,34 +3,22 @@
       <friendship-link></friendship-link>
       <hr>
       <scenic-spot></scenic-spot>
-      <hr>
+      <!--<hr>-->
+      <!--<notice></notice>-->
     </div>
 </template>
 
 <script>
   import FriendshipLink from './FriendshipLink'
   import ScenicSpot from './ScenicSpot'
+  import Notice from './Notice'
+  import {mapGetters} from 'vuex'
+
   export default {
     name: "cooperation-mng",
     data(){
       return {
         friendshipLink: [
-          {
-            title: "西华大学",
-            href: "http://www.xhu.edu.cn/"
-          },
-          {
-            title: "高德地图",
-            href: "https://www.amap.com/"
-          },
-          {
-            title: "易班",
-            href: "http://www.yiban.cn/"
-          },
-          {
-            title: "西华大学",
-            href: "http://www.xhu.edu.cn/"
-          },
           {
             title: "高德地图",
             href: "https://www.amap.com/"
@@ -51,6 +39,7 @@
             title: "易班",
             href: "http://www.yiban.cn/"
           }
+
         ],
         formLabelAlign: {
           name: '微力实验室',
@@ -58,26 +47,26 @@
         }
       }
     },
+    computed: {
+      ...mapGetters([
+        'adminIsLogin'
+      ])
+    },
     components: {
       FriendshipLink,
-      ScenicSpot
+      ScenicSpot,
+      Notice
     },
 
     methods: {
-      onSubmit(){
-        this.hrefTitle.push(this.formLabelAlign.name)
-      }
+
     },
     mounted(){
       //初始化列表
-      {
-        this.hrefTitle.forEach((item, index) => {
-          this.data2.push({
-            label: item,
-            key: index
-          })
-        })
+      if(!this.adminIsLogin){
+        this.$router.push('/admin')
       }
+
     }
 
   }

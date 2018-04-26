@@ -23,12 +23,14 @@
         >
           {{item.name}}
         </router-link>
+        <li><a style="color: #000;text-decoration: none;" href="http://fun.daiwoqu.com/">发现美好</a></li>
       </ul>
       <span class="weather">今天的天气：{{weather.weather}}  /温度： {{weather.temperature}}℃</span>
     </nav>
     <div class="header">
       <router-link class="toIndex" to="/">
         <div class="logText">西华bus</div>
+        <!--<div class="logText"><img style="width: 150px; margin-top: -10px;" src="../../static/logo.png"></div>-->
       </router-link>
       <span class="minText">公交查询系统</span>
     </div>
@@ -46,10 +48,6 @@
           {
             name: "首页",
             to: "/index"
-          },
-          {
-            name: "天气",
-            to: "/weather"
           },
           {
             name: "地图",
@@ -121,7 +119,8 @@
   .header
     height 100px
     background-image url("../assets/banner_logo.png")
-    background-position bottom
+    /*background-position bottom*/
+    background-position 40%
     border-bottom 5px solid $color-theme
     position relative
     .toIndex
@@ -134,12 +133,12 @@
         line-height 48px
         font-size 36px
         font-weight bolder
-        margin-left  48%
+        margin-left  43%
         cursor pointer
         color $color-theme
     .minText
       font-size 18px
-      margin-left 48%
+      margin-left 43%
       position absolute
       bottom -5px
       display inline-block

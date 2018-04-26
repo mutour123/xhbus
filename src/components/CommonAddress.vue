@@ -53,16 +53,34 @@
             type: 'warning'
           })
           this.addValue = ''
+
           return
         }
         this.addressArr.push(this.addValue)
+        // store.set("commonaddress", this.addressArr)
         this.addValue = ''
       },
       delHander(e){
         let target = e.target
         let index = $(target).parent().attr('data-index')
         this.addressArr.splice(index, 1)
+      },
+
+    getCommonAddress:function(){
+      /*getHisttory:()=>{
+      console.log("this++++++++++++++++++++")
+      console.log(this)
+      console.log("初始+++++++++++++++")
+      console.log(this.historyTaskList)*/
+      // this.addressArr = store.get("commonaddress") ? store.get("commonaddress") : []
+      // this.historyTaskList.reverse()
+      /*     console.log("======================")
+           console.log(this.historyTaskList)*/
       }
+    },
+    mounted(){
+      // console.log(store)
+      // this.getCommonAddress()
     }
   }
 </script>

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Mine from '../components/Mine'
 import Transfer from '../components/Transfer'
+import Notice from '../components/admin/Notice'
 import LineSearch from '../components/LineSearch'
 import Station from '../components/Station'
 import User from '../components/User'
@@ -31,6 +32,7 @@ export default new Router({
           path: '/transfer',
           component: Transfer
         },
+
         {
           path: '/linesearch',
           name: 'LineSearch',
@@ -65,6 +67,10 @@ export default new Router({
         {
           path: '/travelmng',
           component: TranelMng
+        },
+        {
+          path: '/announce',
+          component: Notice
         },
         {
           path: '/nearad',

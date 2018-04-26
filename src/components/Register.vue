@@ -25,15 +25,22 @@
       <el-form-item required label="电话号码:"  :label-width="formLabelWidth">
         <el-input  v-model="form.telphone" type="tel" placeholder="请输入电话号码" ></el-input>
       </el-form-item>
+      <div style="display: flex;margin-bottom: 10px;">
+        <el-button  @click="getVerificationCode"  class="getVerificationBtn" >
+          <div>
+            <span>{{isGetVerificationCode}}</span> <span v-if=" isGetVerificationCode != '获取验证码'">s</span>
+          </div>
+        </el-button>
+        <el-input style="margin-left: 10px"  v-model="form.code" type="tel" placeholder="请输入验证码" ></el-input>
+      </div>
       <div class="clearfloat">
         <div class="btncon">
-          <el-button @click="dialogRegVisible = false">取 消</el-button>
-          <el-button @click="resetForm('ruleForm2')">重置</el-button>
+          <!--<el-button @click="dialogRegVisible = false">取 消</el-button>-->
+          <el-button @click="resetForm">重置</el-button>
           <el-button type="primary" @click="regHhander">注册</el-button>
         </div>
       </div>
     </el-form>
-
   </div>
 </template>
 
@@ -64,13 +71,14 @@
           return {
             formLabelWidth: '120px',
             form: {
-              username: 'admin',
+              username: '念念公子',
               password: '123456',
               checkPass: '123456',
               gender: '1',
               birthday: '2018-03-21',
               introduce: '这个人很懒，没有留下任何东西...',
-              telphone: '17345678910'
+              telphone: '15520446752',
+              code:''
             },
             rules2: {
               password: [
@@ -79,12 +87,41 @@
               checkPass: [
                 { validator: validatePass2, trigger: 'blur' }
               ],
-            }
+            },
+            isGetVerificationCode: "获取验证码"
           }
         },
       methods: {
-        resetForm(formName) {
-          this.$refs[formName].resetFields();
+        getVerificationCode(){
+          console.log('获得验证码')
+          this.isGetVerificationCode = 60
+          let timer = setInterval(() => {
+            if (this.isGetVerificationCode <= 0 ){
+              clearInterval(timer)
+              this.isGetVerificationCode = "获取验证码"
+              return
+            }
+            this.isGetVerificationCode -= 1
+            // console.log(this.isGetVerificationCode)
+          }, 1000)
+          let data = Qs.stringify({ telphone: this.form.telphone})
+          this.$http.post('http://120.77.170.124:8080/busis/user/sms.do', data,
+            {
+              headers:{'Content-Type':'application/x-www-form-urlencoded'},
+              withCredentials: true // 允许携带cookie
+            }
+            ).then((res)=>{
+            console.log("已发送")
+            console.log(res)
+          }).catch(err => {
+            console.log(err)
+          })
+        } ,
+        resetForm() {
+          for( var key in this.form){
+            this.form[key] = ""
+          }
+          // this.$refs[formName].resetFields();
         },
         regHhander(){
           if (this.password != this.checkPass){
@@ -93,9 +130,13 @@
           this.$emit('hidden')
           let _this = this
           let data = Qs.stringify(this.form)
-          this.$http.post('/api/user/register.do',
+          this.$http.post('http://120.77.170.124:8080/busis/user/register.do',
             data,
-            {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+            {
+              headers:{'Content-Type':'application/x-www-form-urlencoded'},
+              withCredentials: true // 允许携带cookie
+            }
+
             )
             .then(res => {
               console.log(res.data)
@@ -121,8 +162,18 @@
 </script>
 
 <style scoped lang="stylus">
+  .getVerificationBtn
+    box-sizing border-box
+    color red
+    padding 0
+    margin-left 20px
+    background-color #28d9ff
+    div
+      width 85px
+      text-align center
   .btncon
     float right
+
   .clearfloat:after
     display block
     clear both

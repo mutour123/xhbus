@@ -14,17 +14,20 @@ module.exports = {
       '/api': {
         // target:'http://localhost:3000',
         target:'http://120.77.170.124:8080/busis',
+        // target:'http://192.168.3.204:8080/busis',
         changeOrigin: true,
         pathRewrite: {
           '^/api':''
-        }
+        },
+        cookieDomainRewrite: "http://localhost:8080/",
+
       }
     },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
+    autoOpenBrowser: true,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-

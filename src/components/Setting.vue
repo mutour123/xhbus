@@ -7,7 +7,10 @@
           <img :src="head_portrail.head_portrail" class="image" ref="headimg" alt="">
         </div>
         <div class="test-button">
-          <label class="btn lab-input" for="uploads" >选择</label>
+          <label class="btn lab-input" for="uploads" >
+            <span>选择</span>
+            <!--<span @click.stop.prevent.self="sureSubmit">确认提交</span>-->
+          </label>
           <input type="file" id="uploads" class="myfile" accept="image/*" @change="loadImg($event)">
         </div>
       </div>
@@ -67,7 +70,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
   import vueCropper from 'vue-cropper'
   import { mapGetters } from 'vuex'
@@ -81,6 +83,8 @@
     },
     data() {
       return {
+        file: {},//图片
+        isSubmit: false,//切换按钮
         option: {
           size: 1,
           full: false,
@@ -92,7 +96,7 @@
           canScale: true,
           autoCrop: true,
           fixed: true,
-          fixedNumber: [3, 4]
+          fixedNumber: [3, 4],
         },
         vueCropper: vueCropper,
         formLabelWidth: '120px',
@@ -100,12 +104,11 @@
         dialogVisible: false,
         selectedImgUrl: '../../static/meinv.jpg',
         head_portrail: {
-          user_id: 1,
-          head_portrail: 'https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=1693588259,1862034499&fm=58&u_exp_0=1126554644,1528729089&fm_exp_0=86&bpow=320&bpoh=480',
+          // head_portrail: '../../static/headdfault.jpg',
+          head_portrail: 'http:/120.77.170.124:8080/busis/upload/imgs/20180424/1524578439971_517.jpg',
         }
       }
     },
-
     components: {
       vueCropper
     },
@@ -117,12 +120,27 @@
         delete this.form.password
         console.log(this.form)
         let data = Qs.stringify(this.form)
-        let data1 = Qs.stringify(this.head_portrail)
         this.$http.post('/api/user/modify.do', data)
           .then(res => {
-            console.log(res)
+            if (res.data.code == 1){
+              this.$message({
+                showClose: true,
+                message: '修改成功',
+                type: 'success'
+              })
+            }else {
+              this.$message({
+                showClose: true,
+                message: '修改失败',
+                type: 'error'
+              })
+            }
           }).catch(err => {
-            console.log(err)
+          this.$message({
+            showClose: true,
+            message: `修改失败:${err}`,
+            type: 'error'
+          })
         })
         /*Promise.all([
           this.$http.post('/api/user/modify.do', data),
@@ -149,11 +167,42 @@
        */
       suerHander(){
         this.$refs.cropper.getCropData((data) => {
-          console.log(data)
           this.head_portrail.head_portrail = data
           this.$refs.cropper.clearCrop()
           this.dialogVisible = false
         })
+        //发起请求表示成功
+        // this.$refs.cropper.getCropBlob((data) => {
+          let formData = new FormData();
+          formData.append('user_id', 1);
+          console.log(this.file)
+          formData.append('file', this.file);
+          this.$http.post('/api/user/modify/head_portrail/file.do',
+            formData,
+            {headers:{'Content-Type': 'multipart/form-data'}}
+          ).then(res => {
+            if (res.data.code == 1) {
+              this.$message({
+                showClose: true,
+                message: '修改成功',
+                type: 'success'
+              })
+            }else {
+              this.$message({
+                showClose: true,
+                message: `修改失败`,
+                type: 'error'
+              })
+            }
+          })
+            .catch(err => {
+              this.$message({
+                showClose: true,
+                message: `修改失败 ${err}`,
+                type: 'error'
+              })
+            })
+        // })
       },
       /**
        * 取消裁剪
@@ -167,7 +216,7 @@
        * @param e
        */
       loadImg(e){
-        let file = e.target.files[0]
+        let file = this.file = e.target.files[0]
         let reader = new FileReader()
         let _this = this
         reader.readAsDataURL(file)
@@ -179,7 +228,10 @@
     },
     mounted(){
       this.form = this.person
-      this.head_portrail.user_id = this.person.user_id
+      console.log("testtesttestst")
+      if (this.person.head_portrail){
+        // this.head_portrail.head_portrail = JSON.parse(this.person.head_portrail)
+      }
     }
   }
 </script>
@@ -200,11 +252,11 @@
       position absolute
       bottom 2px
       left 50%
-      margin-left -25px
+      margin-left -50px
       border-radius 5px
       font-size 14px
       cursor pointer
-      width 50px
+      width 100px
       line-height 26px
       background-color #3399ff
       color white

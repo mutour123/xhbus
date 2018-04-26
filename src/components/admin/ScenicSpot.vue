@@ -15,7 +15,7 @@
                 width="60">
               </el-table-column>
               <el-table-column
-                prop="title"
+                prop="name"
                 label="景点"
                 width="150">
               </el-table-column>
@@ -48,113 +48,50 @@
 </template>
 
 <script>
-    export default {
+  import Qs from 'qs'
+
+  export default {
         name: "scenic-spot",
       data(){
         return {
-          friendshipLink: [
-            {
-              title: "西华大学",
-              href: "http://www.xhu.edu.cn/"
-            },
-            {
-              title: "高德地图",
-              href: "https://www.amap.com/"
-            },
-            {
-              title: "易班",
-              href: "http://www.yiban.cn/"
-            },
-            {
-              title: "西华大学",
-              href: "http://www.xhu.edu.cn/"
-            },
-            {
-              title: "高德地图",
-              href: "https://www.amap.com/"
-            },
-            {
-              title: "易班",
-              href: "http://www.yiban.cn/"
-            },
-            {
-              title: "西华大学",
-              href: "http://www.xhu.edu.cn/"
-            },
-            {
-              title: "高德地图",
-              href: "https://www.amap.com/"
-            },
-            {
-              title: "易班",
-              href: "http://www.yiban.cn/"
-            }
-          ],
           formLabelAlign: {
-            name: '微力实验室',
-            address: 'www.weilylab.com',
+            name: '西华大学',
+            url : '景点',
           },
-          scenicSpot: [
-            {
-              title:" 杭州西湖"
-            },
-            {
-              title:" 颐和园"
-            },
-            {
-              title:" 丽江古城"
-            },
-            {
-              title:" 泰山"
-            },
-            {
-              title:" 武当山"
-            },
-            {
-              title:" 上海东方明珠"
-            },
-            {
-              title:" 大理"
-            },
-            {
-              title:" 四川峨眉山"
-            },
-            {
-              title:" 西藏布达拉宫"
-            },
-            {
-              title:" 桂林漓江"
-            },
-            {
-              title:" 长江三峡"
-            },
-            {
-              title:" 北京水立方"
-            },
-            {
-              title:" 长白山"
-            },
-            {
-              title:" 黄果树瀑布"
-            },
-            {
-              title:" 武夷山"
-            },
-            {
-              title:" 西华大学"
-            },
-            {
-              title:" 五台山"
-            },
-            {
-              title:" 蓬莱八仙过海"
-            }
-          ],
+          scenicSpot: [],
         }
       },
       methods: {
         onSubmit(){
-          // this.hrefTitle.push(this.formLabelAlign.name)
+          this.scenicSpot.push({name: this.formLabelAlign.name})
+          let data = Qs.stringify(this.formLabelAlign)
+          this.$http.post('/api/admin/link/add.do',
+            data,
+            {headers:{'Content-Type':'application/x-www-form-urlencoded'}}
+          ).then(res => {
+            console.log(res.data)
+          }).catch(err => {
+            console.log(err)
+          })
+        }
+      },
+      mounted(){
+        {
+          this.$http.get('/api/admin/link/getall.do')
+            .then(res => {
+              if (res.data.code == 1) {
+                console.log(res.data)
+                let result = res.data.data
+                this.scenicSpot = result.filter(item => {
+                  if (item.url == "景点") {
+                    return item.name
+                  }
+                })
+              }
+            })
+            .catch(err => {
+              console.log(err)
+            })
         }
       }
     }

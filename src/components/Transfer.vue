@@ -4,7 +4,7 @@
       <div class="searchInputContent">
         <div>
           <label class="transferInputLabel" >出发地</label>
-          <el-input class="transferInput" v-model="transferValue.start" placeholder="请输入起点名称" clearable></el-input>
+          <el-input class="transferInput" v-showlist="transferValue" v-model="transferValue.start"  placeholder="请输入起点名称" clearable></el-input>
         </div>
         <div>
           <label class="transferInputLabel">目的地</label>
@@ -15,13 +15,23 @@
         <span class="switch noselect" :style="background" @click="switchInput" id="switch"></span>
       </div>
       <div>
-        <el-button class="searchButton" type="primary" @click="search" icon="el-icon-search">搜索</el-button>
+        <el-button class="searchButton" type="primary" @click="search(0)" icon="el-icon-search">搜索</el-button>
       </div>
     </div>
     <div class="detail">
       <div  class="loadingCon" ref="loadingCon">
         <img class="loading" src="../../static/image/timg2.gif" alt="加载中">
         <span class="loadingText">加载中......</span>
+      </div>
+      <div class="transferPolicyCon" v-if="searchResult.plans">
+        <ul  class="transferPolicy">
+          <li :class="{action: action == 0}" @click="search(0)">时间最短</li>
+          <li :class="{action: action == 1}" @click="search(1)">最经济</li>
+          <li :class="{action: action == 2}" @click="search(2)">最少换成</li>
+          <li :class="{action: action == 3}" @click="search(3)">最少步行</li>
+          <li :class="{action: action == 4}" @click="search(4)">最舒适</li>
+          <li :class="{action: action == 5}" @click="search(5)">不乘地铁</li>
+        </ul>
       </div>
       <panel
         :transferResult="searchResult"
@@ -42,6 +52,7 @@
         },
         data(){
           return{
+            action: -1,
             background:{},
             img1:{
               background: "url("+require('../../static/image/switch.back.png')+")"
@@ -53,11 +64,13 @@
               start: "西华大学西大门站",
               end: "天府三街"
             },
-            transfer:"",//用于查询的Transfer对象
             searchResult: {},//获取到的数据对象
           }
         },
       methods: {
+        showList(){
+          console.log("展示list")
+        },
         /**
          * 交换出发地和目的地，并且改变图片
          */
@@ -65,22 +78,40 @@
           [this.transferValue.start, this.transferValue.end] = [this.transferValue.end, this.transferValue.start]
           this.background = this.background == this.img1 ? this.img2 : this.img1
         },
-        search(){
+        /**
+         * 搜索路线
+         * @param num
+         */
+        search(num){
+          if (num == this.action) {
+            return
+          }
+          this.action = num//设置激活状态
           $(this.$refs.loadingCon).css("display", "block")
-          //在这里写一个加载动画
-          this.$store.state.AMap.transfer.search([{keyword: this.transferValue.start},{keyword: this.transferValue.end}], (status, result)=>{
-            //  解析返回结果，自己生成操作界面和地图展示界面
-            if(status === 'complete' && result.info === 'OK'){
-              console.log(result)
-              $(this.$refs.loadingCon).css("display", "none")
 
-              this.searchResult = result
-              //此时的唯一组件是
-              // console.log(JSON.stringify(result))
-            }else{
-              console.log(result)
-            }
+          AMap.service('AMap.Transfer', ()=>{
+              var transfer = new AMap.Transfer({
+                city: this.$store.state.localCity,
+                extensions: 'all',
+                policy: this.action //乘车策略
+              })
+
+            transfer.search([{keyword: this.transferValue.start},{keyword: this.transferValue.end}], (status, result)=>{
+              //  解析返回结果，自己生成操作界面和地图展示界面
+              if(status === 'complete' && result.info === 'OK'){
+                console.log(result)
+                $(this.$refs.loadingCon).css("display", "none")
+                this.searchResult = result
+                //此时的唯一组件是
+                // console.log(JSON.stringify(result))
+              }else{
+                console.log(result)
+              }
+            })
           })
+          // this.$store.commit('changeTransferPolicy', this.transferPolicy[this.action])
+          //在这里写一个加载动画
+
 
         }
       },
@@ -92,7 +123,6 @@
 
 <style scoped lang="stylus">
   .transferInputLabel
-    /*padding 10px*/
     width 14%
     display inline-block
   .transferInput
@@ -147,8 +177,27 @@
       position relative
       top 50%
       margin-top -100px
-
-
+  .transferPolicyCon
+    padding-top 20px
+  .transferPolicy
+    list-style none
+    margin 0
+    padding 0px
+    overflow hidden
+    background-color #eeeeee
+    li
+      float left
+      padding 10px
+      /*padding-bottom 0px*/
+      /*padding-top 0px*/
+      cursor pointer
+      cursor #eee
+    li:hover
+      background-color #55b7e9
+    li+li
+      border-left 1px slateblue solid
+    .action
+      background-color #55b7e9
 
   .noselect//禁止选中
     user-select none

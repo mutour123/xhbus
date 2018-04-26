@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="contain">
       <route
         v-for="(item, index) in transferResult.plans"
         :key="index"
@@ -31,11 +31,15 @@
     methods: {
       deleteCollection(data){
         this.$emit('delete', data)
-        }
+      },
+      searchDefault(){
+
+      }
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="stylus">
+
 
 </style>

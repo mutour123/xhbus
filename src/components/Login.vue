@@ -25,8 +25,8 @@
       data(){
         return {
           form: {
-            account: '小木',
-            password: '123456'
+            account: 'Bob',
+            password: '123123'
           },
           formLabelWidth: '120px',
         }
@@ -67,17 +67,6 @@
               type: 'error'
             })
           })
-
-
-            /*.catch( err => {
-              console.log(err)
-              console.log('登录失败')
-              _this.$message({
-                showClose: true,
-                message: '登录失败',
-                type: 'error'
-              })
-            })*/
         },
       }
     }
